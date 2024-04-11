@@ -11,7 +11,7 @@ const Contact = async (req: Request, res: Response) => {
             message: message
         });
         const savedContact = await newContact.save();
-        res.status(201).json(savedContact);
+        res.status(201).json({message: "you have successfull sent message",Data:savedContact});
     } catch (error) {
         console.error("Error saving contact:", error);
         res.status(500).json({ message: "Internal Server Error" });
