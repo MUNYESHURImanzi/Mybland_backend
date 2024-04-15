@@ -1,0 +1,318 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "MyBrand API",
+        "description": "API documentation for MyBrand application",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:3000",
+            "description": "Local server"
+        }
+    ],
+    "paths": {
+        "/authentication": {
+            "post": {
+                "summary": "Authentication endpoints",
+                "description": "Endpoints for user authentication",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid email or password"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "summary": "User endpoints",
+                "description": "Endpoints for user management",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["name", "email", "password"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created successfully"
+                    },
+                    "400": {
+                        "description": "Email already in use"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/articles": {
+            "post": {
+                "summary": "Article endpoints",
+                "description": "Endpoints for managing articles",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "content": {
+                                        "type": "string"
+                                    },
+                                    "author": {
+                                        "type": "string"
+                                    },
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "required": ["title", "content", "file"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Article saved successfully"
+                    },
+                    "400": {
+                        "description": "File is required"
+                    },
+                    "500": {
+                        "description": "Failed to save the article"
+                    }
+                }
+            }
+        },
+        "/contact": {
+            "post": {
+                "summary": "Contact endpoints",
+                "description": "Endpoints for submitting contact forms",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "FullName": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["FullName", "email", "phone", "message"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Contact form submitted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "Data": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/comments": {
+            "get": {
+                "summary": "Comments endpoints",
+                "description": "Endpoints for managing comments",
+                "responses": {
+                    "200": {
+                        "description": "All comments retrieved successfully"
+                    },
+                    "500": {
+                        "description": "Failed to retrieve all comments"
+                    }
+                }
+            }
+        },
+        "/articles/{id}/comments": {
+            "post": {
+                "summary": "Add Comment to Article",
+                "description": "Endpoint for adding comments to articles",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "comment": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": ["email", "comment"]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Comment saved successfully"
+                    },
+                    "500": {
+                        "description": "Failed to save the comment"
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get Comments by Article ID",
+                "description": "Endpoint for retrieving comments by article ID",
+                "responses": {
+                    "200": {
+                        "description": "Comments retrieved successfully"
+                    },
+                    "500": {
+                        "description": "Failed to retrieve comments"
+                    }
+                }
+            }
+        },
+        "/articles/{articleId}": {
+            "put": {
+                "summary": "Update Article by ID",
+                "description": "Endpoint for updating articles by ID",
+                "responses": {
+                    "200": {
+                        "description": "Article updated successfully"
+                    },
+                    "404": {
+                        "description": "Article not found"
+                    },
+                    "500": {
+                        "description": "Failed to update the article"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete Article by ID",
+                "description": "Endpoint for deleting articles by ID",
+                "responses": {
+                    "200": {
+                        "description": "Article deleted successfully"
+                    },
+                    "404": {
+                        "description": "Article not found"
+                    },
+                    "500": {
+                        "description": "Failed to delete the article"
+                    }
+                }
+            }
+        },
+        "/articles/{articleId}/comments": {
+            "post": {
+                "summary": "Add Comment to Article by ID",
+                "description": "Endpoint for adding comments to articles by ID",
+                "responses": {
+                    "200": {
+                        "description": "Comment added successfully"
+                    },
+                    "500": {
+                        "description": "Failed to save the comment"
+                    }
+                }
+            }
+        },
+        "/articles/more": {
+            "get": {
+                "summary": "Get More Articles",
+                "description": "Endpoint for retrieving additional articles",
+                "responses": {
+                    "200": {
+                        "description": "Additional articles retrieved successfully"
+                    }
+                }
+            }
+        }
+    }
+}

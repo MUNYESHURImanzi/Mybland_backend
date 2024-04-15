@@ -1,14 +1,10 @@
 import express, { Application } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
-import routes from "./src/Routers";
+import routes from '../Routers';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './src/Documentation/swagger.json';
-require('dotenv').config();
+import swaggerDocument from './swagger.json';
 
-const DATABASE_URL: string = process.env.DATABASE_URL!;
-
-
-
+const DATABASE_URL: string = 'mongodb+srv://munyeshuri:Munyeshuri@cluster0.yqd0pr4.mongodb.net/mydatabase?retryWrites=true&w=majority';
 
 mongoose.connect(DATABASE_URL, {
   useNewUrlParser: true,
@@ -20,20 +16,19 @@ mongoose.connect(DATABASE_URL, {
 const app: Application = express();
 
 app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-const cors=require("cors");
-const corsOptions ={
-   origin:'*', 
-   credentials:true,           
-   optionSuccessStatus:200,
+const cors = require("cors");
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  optionSuccessStatus: 200,
 }
+app.use(cors(corsOptions));
 
-app.use(cors(corsOptions)) 
+// Swagger setup
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const router = express.Router();
-
 routes(router);
-
 app.use("/", router);
 
 const port: number = 3000;

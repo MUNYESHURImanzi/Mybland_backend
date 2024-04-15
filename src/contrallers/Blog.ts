@@ -9,9 +9,9 @@ interface MulterRequest extends Request {
 }
 
 cloudinary.v2.config({
-    cloud_name:'daoqhvblq',
-    api_key: '114768926217927',
-    api_secret:'TNE9FTSGxtM0mNzhbVxauqU6mYE'
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 const getAllArticles = async (req: Request, res: Response) => {
@@ -43,9 +43,8 @@ const createArticle = async (req: MulterRequest, res: Response) => {
             });
         }
 
-        // Upload file to Cloudinary
         const result = await cloudinary.v2.uploader.upload(req.file.path);
-        // Extract the secure URL of the uploaded file
+       
         file = result.secure_url;
         console.log('Uploaded file:', file);
 

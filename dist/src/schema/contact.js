@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var mongoose_1 = require("mongoose");
-var MessageModel = new mongoose_1.default.Schema({
+const mongoose_1 = __importDefault(require("mongoose"));
+const MessageModel = new mongoose_1.default.Schema({
     FullName: {
         type: String,
         required: [true, "Name is required"]
@@ -19,5 +22,5 @@ var MessageModel = new mongoose_1.default.Schema({
         required: [true, "message is required"]
     }
 });
-var ContactModel = mongoose_1.default.model("Contact Us", MessageModel);
+const ContactModel = mongoose_1.default.model("Contact Us", MessageModel);
 exports.default = ContactModel;
