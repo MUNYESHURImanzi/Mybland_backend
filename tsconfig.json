@@ -9,7 +9,7 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "types": ["node", "@types/express", "@types/multer"],
+    "types": ["node", "express", "multer"],
     "strict": true
   }
 }
