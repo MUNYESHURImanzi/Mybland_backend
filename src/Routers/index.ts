@@ -1,5 +1,5 @@
 import express, { RequestHandler } from 'express';
-import { createArticle, updateArticle, deleteArticle, addingComments, moreArticle, getAllArticles } from '../contrallers/Blog';
+import { createArticle, updateArticle,getSingleArticle, deleteArticle, addingComments, moreArticle, getAllArticles } from '../contrallers/Blog';
 import { signupUser, loginUser } from '../contrallers/user';
 import Contact from '../contrallers/contact';
 import multer from 'multer';
@@ -24,6 +24,7 @@ export default (router: express.Router) => {
     });
 
     router.get('/articles', getAllArticles);
+    router.get('/articles/:articleId', getSingleArticle)
 
 
     router.post('/articles/:id/comments', addComment);

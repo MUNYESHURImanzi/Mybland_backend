@@ -1,8 +1,8 @@
 import express, { Application } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
-import routes from "./src/Routers";
+import routes from "./Routers";
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from './src/Documentation/swagger.json';
+import swaggerDocument from './Documentation/swagger.json';
 require('dotenv').config();
 
 const DATABASE_URL: string = process.env.DATABASE_URL!;

@@ -1,9 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 import ArticleModel from '../schema/Blog';
 import Comments from '../schema/comments';
 import cloudinary from 'cloudinary';
 
-
+require('dotenv').config();
 interface MulterRequest extends Request {
     file: any;
 }
@@ -78,18 +78,25 @@ const createArticle = async (req: MulterRequest, res: Response) => {
     }
 };
 
-const updateArticle = async (req: Request, res: Response) => {
+const updateArticle: RequestHandler = async (req, res) => {
     try {
         const articleId: string = req.params.articleId;
         const updates: Partial<any> = req.body;
 
+        let fileUrl = '';
+        if (req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            fileUrl = result.secure_url;
+            updates.file = fileUrl;
+        }
         const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, updates, { new: true });
+
         if (!updatedArticle) {
-            res.status(404).json({
+            return res.status(404).json({
                 message: 'Article not found',
             });
-            return;
         }
+        
         res.status(200).json({
             message: 'Article updated successfully',
             data: updatedArticle,
@@ -102,6 +109,7 @@ const updateArticle = async (req: Request, res: Response) => {
         });
     }
 };
+
 
 const deleteArticle = async (req: Request, res: Response) => {
     try {
@@ -149,8 +157,29 @@ const addingComments = async (req: Request, res: Response) => {
     }
 };
 
+const getSingleArticle = async (req: Request, res: Response) => {
+    try {
+        const articleId: string = req.params.articleId;
+        const article = await ArticleModel.findById(articleId);
+        if (!article) {
+            res.status(404).json({
+                message: 'Article not found',
+            });
+            return;
+        }
+        res.status(200).json({
+            message: 'Article retrieved successfully',
+            data: article,
+        });
+    } catch (err: any) {
+        console.error(err);
+        res.status(500).json({
+            message: 'Failed to retrieve the article',
+            error: err.message,
+        });
+    }
+};
 const moreArticle = (req: Request, res: Response) => {
 
 };
-
-export { getAllArticles, createArticle, updateArticle, deleteArticle, addingComments, moreArticle };
+export { getAllArticles,getSingleArticle, createArticle, updateArticle, deleteArticle, addingComments, moreArticle };
