@@ -2,11 +2,11 @@
   "name": "mybrand_backend",
   "version": "1.0.0",
   "description": "",
-  "files": ["dist/**"],
+  "files": ["dist/"],
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
-    "build": "tsc -p .",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
  
