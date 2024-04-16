@@ -2,6 +2,7 @@
   "name": "mybrand_backend",
   "version": "1.0.0",
   "description": "",
+  "files": ["dist/**"],
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
