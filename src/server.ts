@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import mongoose, { ConnectOptions } from "mongoose";
-import routes from "./Routers";
+import routes from "./Routers/routers";
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from './Documentation/swagger.json';
 require('dotenv').config();

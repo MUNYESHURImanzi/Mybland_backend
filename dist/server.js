@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const Routers_1 = __importDefault(require("./Routers"));
+const routers_1 = __importDefault(require("./Routers/routers"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swagger_json_1 = __importDefault(require("./Documentation/swagger.json"));
 require('dotenv').config();
@@ -27,7 +27,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 const router = express_1.default.Router();
-(0, Routers_1.default)(router);
+(0, routers_1.default)(router);
 app.use("/", router);
 const port = 3000;
 app.listen(port, () => {
