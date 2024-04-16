@@ -2,18 +2,20 @@
   "name": "mybrand_backend",
   "version": "1.0.0",
   "description": "",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
- 
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node": "^20.12.7",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.1.0",
     "cors": "^2.8.5",
