@@ -97,6 +97,7 @@ const updateArticle: RequestHandler = async (req, res) => {
             });
         }
         
+        // Article updated successfully
         res.status(200).json({
             message: 'Article updated successfully',
             data: updatedArticle,

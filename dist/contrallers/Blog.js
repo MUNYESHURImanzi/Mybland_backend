@@ -96,6 +96,7 @@ const updateArticle = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 message: 'Article not found',
             });
         }
+        // Article updated successfully
         res.status(200).json({
             message: 'Article updated successfully',
             data: updatedArticle,
