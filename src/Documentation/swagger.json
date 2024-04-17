@@ -8,7 +8,15 @@
   "servers": [
     {
       "url": "http://localhost:3000",
-      "description": "Local server"
+      "description": "Local HTTP server"
+    },
+    {
+      "url": "https://localhost:3000",
+      "description": "HTTP"
+    },
+    {
+      "url": "https://mybland-backend-c3uv.onrender.com",
+      "description": "HTTPS"
     }
   ],
   "paths": {
