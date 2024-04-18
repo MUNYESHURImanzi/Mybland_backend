@@ -20,7 +20,7 @@
     }
   ],
   "paths": {
-    "/authentication": {
+    "/login": {
       "post": {
         "summary": "Authentication endpoints",
         "description": "Endpoints for user authentication",
@@ -71,7 +71,7 @@
         }
       }
     },
-    "/users": {
+    "/signup": {
       "post": {
         "summary": "User endpoints",
         "description": "Endpoints for user management",
