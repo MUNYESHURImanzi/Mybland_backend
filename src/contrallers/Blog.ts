@@ -35,23 +35,20 @@ const createArticle = async (req: MulterRequest, res: Response) => {
         const { title, content, author } = req.body;
         let file = ''; 
 
-        
         if (!req.file) {
             return res.status(400).json({
-                message: 'file file is required',
-                
+                message: 'File is required',
             });
         }
 
         const result = await cloudinary.v2.uploader.upload(req.file.path);
-       
         file = result.secure_url;
         console.log('Uploaded file:', file);
 
         const articleInstance = new ArticleModel({
-            title,
-            content,
-            author: author || 'munyeshuyi',
+            title: req.body.title,
+            content: req.body.content,
+            author: req.body.author || 'munyeshuyi',
             file,
         });
 
@@ -73,43 +70,82 @@ const createArticle = async (req: MulterRequest, res: Response) => {
             message: 'Failed to save the article',
             error: err.message,
             failedData: failedData,
-            
         });
     }
 };
 
 const updateArticle: RequestHandler = async (req, res) => {
     try {
-        const articleId: string = req.params.articleId;
-        const updates: Partial<any> = req.body;
-
-        let fileUrl = '';
-        if (req.file) {
-            const result = await cloudinary.v2.uploader.upload(req.file.path);
-            fileUrl = result.secure_url;
-            updates.file = fileUrl;
+      const articleId: string = req.params.articleId;
+      let updates: Partial<any> = req.body;
+      console.log("Request object:", req);
+      console.log("Data being sent for update or create:", req.body);
+  
+      if (!articleId) {
+        // If articleId is not provided, create a new article
+        let file = '';
+  
+        if (!req.file) {
+          return res.status(400).json({
+            message: 'File is required',
+          });
         }
-        const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, updates, { new: true });
-
-        if (!updatedArticle) {
-            return res.status(404).json({
-                message: 'Article not found',
-            });
-        }
-        
-        // Article updated successfully
+  
+        const result = await cloudinary.v2.uploader.upload(req.file.path);
+        file = result.secure_url;
+        console.log('Uploaded file:', file);
+  
+        const articleInstance = new ArticleModel({
+          title: req.body.title,
+          content: req.body.content,
+          author: req.body.author || 'munyeshuyi',
+          file,
+        });
+  
+        const savedArticle = await articleInstance.save();
         res.status(200).json({
-            message: 'Article updated successfully',
-            data: updatedArticle,
+          message: 'Article created successfully',
+          data: savedArticle,
         });
+        return;
+      }
+  
+      if (req.file) {
+        const result = await cloudinary.v2.uploader.upload(req.file.path);
+        updates.file = result.secure_url;
+      }
+  
+      console.log('Data being sent for update:', updates); // Log the updates object
+  
+      const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, updates, { new: true });
+  
+      if (!updatedArticle) {
+        return res.status(404).json({
+          message: 'Article not found',
+        });
+      }
+  
+      res.status(200).json({
+        message: 'Article updated successfully',
+        data: updatedArticle,
+      });
     } catch (err: any) {
-        console.error(err);
-        res.status(500).json({
-            message: 'Failed to update the article',
-            error: err.message,
-        });
+      console.error(err);
+      const failedData = {
+        title: req.body.title,
+        content: req.body.content,
+        author: req.body.author,
+        file: req.file ? req.file : 'File data missing',
+      };
+      console.error('Error uploading file:', err);
+      res.status(500).json({
+        message: 'Failed to update or create the article',
+        error: err.message,
+        failedData: failedData,
+      });
     }
-};
+  };
+
 
 
 const deleteArticle = async (req: Request, res: Response) => {
