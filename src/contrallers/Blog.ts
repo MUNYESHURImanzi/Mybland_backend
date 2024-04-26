@@ -2,6 +2,8 @@ import { Request, RequestHandler, Response } from 'express';
 import ArticleModel from '../schema/Blog';
 import Comments from '../schema/comments';
 import cloudinary from 'cloudinary';
+import multer from 'multer';
+import path from 'path';
 
 require('dotenv').config();
 interface MulterRequest extends Request {
@@ -74,77 +76,66 @@ const createArticle = async (req: MulterRequest, res: Response) => {
     }
 };
 
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, 'uploads'));
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
+
 const updateArticle: RequestHandler = async (req, res) => {
     try {
-      const articleId: string = req.params.articleId;
-      let updates: Partial<any> = req.body;
-      console.log("Request object:", req);
-      console.log("Data being sent for update or create:", req.body);
-  
-      if (!articleId) {
-        // If articleId is not provided, create a new article
-        let file = '';
-  
-        if (!req.file) {
-          return res.status(400).json({
-            message: 'File is required',
-          });
+        const articleId: string = req.params.articleId;
+        let updates: Partial<any> = req.body;
+
+        
+        if (!articleId) {
+            return res.status(400).json({
+                message: 'Article ID is required',
+            });
         }
-  
-        const result = await cloudinary.v2.uploader.upload(req.file.path);
-        file = result.secure_url;
-        console.log('Uploaded file:', file);
-  
-        const articleInstance = new ArticleModel({
-          title: req.body.title,
-          content: req.body.content,
-          author: req.body.author || 'munyeshuyi',
-          file,
+
+        // If articleId is provided, update the existing article
+        if (req.file) {
+            const result = await cloudinary.v2.uploader.upload(req.file.path);
+            updates.file = result.secure_url;
+        }
+
+        console.log('Data being sent for update:', updates); // Log the updates object
+
+        const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, updates, { new: true });
+
+        if (!updatedArticle) {
+            return res.status(404).json({
+                message: 'Article not found',
+            });
+        }
+
+        return res.status(200).json({
+            message: 'Article updated successfully',
+            data: updatedArticle,
         });
-  
-        const savedArticle = await articleInstance.save();
-        res.status(200).json({
-          message: 'Article created successfully',
-          data: savedArticle,
-        });
-        return;
-      }
-  
-      if (req.file) {
-        const result = await cloudinary.v2.uploader.upload(req.file.path);
-        updates.file = result.secure_url;
-      }
-  
-      console.log('Data being sent for update:', updates); // Log the updates object
-  
-      const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, updates, { new: true });
-  
-      if (!updatedArticle) {
-        return res.status(404).json({
-          message: 'Article not found',
-        });
-      }
-  
-      res.status(200).json({
-        message: 'Article updated successfully',
-        data: updatedArticle,
-      });
     } catch (err: any) {
-      console.error(err);
-      const failedData = {
-        title: req.body.title,
-        content: req.body.content,
-        author: req.body.author,
-        file: req.file ? req.file : 'File data missing',
-      };
-      console.error('Error uploading file:', err);
-      res.status(500).json({
-        message: 'Failed to update or create the article',
-        error: err.message,
-        failedData: failedData,
-      });
+        console.error(err);
+        const failedData = {
+            title: req.body.title,
+            content: req.body.content,
+            author: req.body.author,
+            file: req.file ? req.file : 'File data missing',
+        };
+        console.error('Error uploading file:', err);
+        return res.status(500).json({
+            message: 'Failed to update the article',
+            error: err.message,
+            failedData: failedData,
+        });
     }
-  };
+};
+
 
 
 
