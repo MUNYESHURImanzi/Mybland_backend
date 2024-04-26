@@ -1,7 +1,7 @@
 import express, { RequestHandler } from 'express';
 import { createArticle, updateArticle,getSingleArticle, deleteArticle, addingComments, moreArticle, getAllArticles } from '../contrallers/Blog';
 import { signupUser, loginUser } from '../contrallers/user';
-import Contact from '../contrallers/contact';
+import { Contact, getAllContacts } from '../contrallers/contact';
 import multer from 'multer';
 import  { addComment, readAllComments, readCommentsById } from "../contrallers/comments"
 
@@ -15,6 +15,7 @@ export default (router: express.Router) => {
     router.post('/signup', signupUser);
     router.post('/login', loginUser);
     router.post('/contact', Contact);
+    router.get('/allcontact', getAllContacts);
 
 
     router.post('/articles', upload.single('file'), (req: express.Request, res: express.Response) => {
