@@ -92,21 +92,22 @@ const updateArticle: RequestHandler = async (req, res) => {
         const articleId: string = req.params.articleId;
         let updates: Partial<any> = req.body;
 
-        
         if (!articleId) {
             return res.status(400).json({
                 message: 'Article ID is required',
             });
         }
 
-        // If articleId is provided, update the existing article
+        
         if (req.file) {
+            
             const result = await cloudinary.v2.uploader.upload(req.file.path);
             updates.file = result.secure_url;
         }
 
         console.log('Data being sent for update:', updates); // Log the updates object
 
+        // Find and update the article by its ID
         const updatedArticle = await ArticleModel.findByIdAndUpdate(articleId, updates, { new: true });
 
         if (!updatedArticle) {
@@ -135,6 +136,7 @@ const updateArticle: RequestHandler = async (req, res) => {
         });
     }
 };
+
 
 
 
