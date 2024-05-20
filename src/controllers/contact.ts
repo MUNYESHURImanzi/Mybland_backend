@@ -7,17 +7,24 @@ const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'munyeshurimanzi@gmail.com',
-        pass: 'vjvi bjue yman hpim'
+        pass: 'dgqz afyn evdp ivlo'
     }
 });
 
 const Contact = async (req: Request, res: Response) => {
-    const { FullName, email, phone, message } = req.body;
+    const { FullName, email, phone, message,subject } = req.body;
     try {
+        // const newContact = new ContactModel({
+        //     FullName: FullName,
+        //     email: email,
+        //     phone: phone,
+        //     message: message
+        // });
         const newContact = new ContactModel({
             FullName: FullName,
             email: email,
             phone: phone,
+            subject: subject,
             message: message
         });
         const savedContact = await newContact.save();

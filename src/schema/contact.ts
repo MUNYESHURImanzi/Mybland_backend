@@ -5,7 +5,8 @@ interface IContact extends Document {
     FullName: string;
     email: string;
     phone: string;
-    message:string
+    message:string;
+    subject:string
 
 }
 
@@ -19,9 +20,12 @@ const MessageModel: Schema<IContact> = new mongoose.Schema({
         type: String,
         required: [true, "Email is required"]
     },
+    subject:{
+        type: String,
+    },
     phone: {
         type: String,
-        required: [true, "phone  is required"]
+       
     },
    message: {
    type: String,
